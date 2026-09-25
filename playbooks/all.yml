@@ -1,31 +1,32 @@
 ---
 # playbooks/all.yml
 
-# noqa: name[play]
-- import_playbook: base.yml
+- name: Base configuration
+  ansible.builtin.import_playbook: base.yml
 
-# noqa: name[play]
-- import_playbook: proxy.yml
+- name: Reverse proxy
+  ansible.builtin.import_playbook: proxy.yml
 
-# noqa: name[play]
-- import_playbook: streaming.yml
+- name: Streaming stack
+  ansible.builtin.import_playbook: streaming.yml
 
-# noqa: name[play]
-- import_playbook: arr.yml
+- name: Arr stack
+  ansible.builtin.import_playbook: arr.yml
 
-# noqa: name[play]
-- import_playbook: downloader.yml
+- name: Downloader stack
+  ansible.builtin.import_playbook: downloader.yml
 
-# noqa: name[play]
-- import_playbook: monitoring.yml
+- name: Monitoring stack
+  ansible.builtin.import_playbook: monitoring.yml
 
-# noqa: name[play]
-- import_playbook: firewall.yml
+- name: Firewall rules
+  ansible.builtin.import_playbook: firewall.yml
 
-# noqa: name[play]
-- import_playbook: library.yml
+- name: Library stack
+  ansible.builtin.import_playbook: library.yml
 
-# noqa: name[play]
-- import_playbook: pihole.yml
+- name: Pi-hole DNS records
+  ansible.builtin.import_playbook: pihole.yml
 
-- import_playbook: backup.yml
+- name: Backups
+  ansible.builtin.import_playbook: backup.yml

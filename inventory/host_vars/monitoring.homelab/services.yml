@@ -41,4 +41,4 @@ docker_compose_services:
       APP_KEY: "{{ vault_speedtest_app_key }}"
       DB_CONNECTION: "sqlite"
       SPEEDTEST_SCHEDULE: "0 */6 * * *"
-      DISPLAY_TIMEZONE: "{{ timezone}}"
+      DISPLAY_TIMEZONE: "{{ timezone }}"
