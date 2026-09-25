@@ -1,0 +1,9 @@
+---
+profile: basic
+
+exclude_paths:
+  - .git/
+  - .cache/
+  - inventory/group_vars/all/vault.yml
+
+skip_list: []
