@@ -33,7 +33,7 @@
     headers:
       sid: "{{ pihole_sid }}"
     validate_certs: false
-    status_code: [ 200, 201 ]
+    status_code: [200, 201]
   loop: "{{ pihole_desired_records }}"
   when: item not in pihole_current_hosts.json.config.dns.hosts
 

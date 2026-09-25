@@ -4,27 +4,27 @@
   become: true
 
   pre_tasks:
-  - name: Ensure Docker is running
-    ansible.builtin.service:
-      name: docker
-      state: started
-      enabled: true
+    - name: Ensure Docker is running
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
 
   roles:
-  - docker_compose
+    - docker_compose
   tasks:
-  - name: Template Homepage services config
-    ansible.builtin.template:
-      src: homepage-services.yml.j2
-      dest: "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/homepage/services.yaml"
-      owner: "{{ docker_compose_owner }}"
-      group: "{{ docker_compose_group }}"
-      mode: "0644"
+    - name: Template Homepage services config
+      ansible.builtin.template:
+        src: homepage-services.yml.j2
+        dest: "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/homepage/services.yaml"
+        owner: "{{ docker_compose_owner }}"
+        group: "{{ docker_compose_group }}"
+        mode: "0644"
 
-  - name: Template Homepage setting config
-    ansible.builtin.template:
-      src: homepage-settings.yml.j2
-      dest: "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/homepage/settings.yaml"
-      owner: "{{ docker_compose_owner }}"
-      group: "{{ docker_compose_group }}"
-      mode: "0644"
+    - name: Template Homepage setting config
+      ansible.builtin.template:
+        src: homepage-settings.yml.j2
+        dest: "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/homepage/settings.yaml"
+        owner: "{{ docker_compose_owner }}"
+        group: "{{ docker_compose_group }}"
+        mode: "0644"

@@ -2,10 +2,10 @@
 - name: Configure SSH hardening
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^#?{{ item.key }}'
-    line: '{{ item.key }} {{ item.value }}'
+    regexp: "^#?{{ item.key }}"
+    line: "{{ item.key }} {{ item.value }}"
   loop:
-    - { key: 'PasswordAuthentication', value: 'no' }
-    - { key: 'PermitRootLogin', value: 'no' }
-    - { key: 'MaxAuthTries', value: '3' }
+    - { key: "PasswordAuthentication", value: "no" }
+    - { key: "PermitRootLogin", value: "no" }
+    - { key: "MaxAuthTries", value: "3" }
   notify: Restart sshd

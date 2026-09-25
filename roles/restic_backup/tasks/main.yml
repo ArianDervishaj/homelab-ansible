@@ -1,9 +1,9 @@
 ---
 - name: Install restic and cron
   ansible.builtin.apt:
-    name: 
-    - restic
-    - cron
+    name:
+      - restic
+      - cron
     state: present
     update_cache: true
 

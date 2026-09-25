@@ -14,7 +14,7 @@
     owner: "65532"
     group: "65532"
     mode: "0600"
-  notify: restart cloudflared
+  notify: Restart cloudflared
 
 - name: Deploy cloudflared config
   ansible.builtin.template:
@@ -23,4 +23,4 @@
     owner: "65532"
     group: "65532"
     mode: "0644"
-  notify: restart cloudflared
+  notify: Restart cloudflared

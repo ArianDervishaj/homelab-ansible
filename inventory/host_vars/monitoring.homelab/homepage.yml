@@ -1,66 +1,67 @@
+---
 homepage_services:
-- group: Monitoring
-  services:
-  - name: Uptime Kuma
-    href: "http://uptime.lan"
-    icon: uptime-kuma
-  - name: Speedtest Tracker
-    href: "http://speedtest.lan"
-    icon: speedtest-tracker
+  - group: Monitoring
+    services:
+      - name: Uptime Kuma
+        href: "http://uptime.lan"
+        icon: uptime-kuma
+      - name: Speedtest Tracker
+        href: "http://speedtest.lan"
+        icon: speedtest-tracker
 
-- group: Streaming
-  services:
-  - name: Jellyfin
-    href: "http://jellyfin.lan"
-    icon: jellyfin
-  - name: Jellyseerr
-    href: "http://jellyseerr.lan"
-    icon: jellyseerr
+  - group: Streaming
+    services:
+      - name: Jellyfin
+        href: "http://jellyfin.lan"
+        icon: jellyfin
+      - name: Jellyseerr
+        href: "http://jellyseerr.lan"
+        icon: jellyseerr
 
-- group: Arr
-  services:
-  - name: Radarr
-    href: "http://radarr.lan"
-    icon: radarr
-  - name: Sonarr
-    href: "http://sonarr.lan"
-    icon: sonarr
-  - name: Prowlarr
-    href: "http://prowlarr.lan"
-    icon: prowlarr
-  - name: Bazarr
-    href: "http://bazarr.lan"
-    icon: bazarr
+  - group: Arr
+    services:
+      - name: Radarr
+        href: "http://radarr.lan"
+        icon: radarr
+      - name: Sonarr
+        href: "http://sonarr.lan"
+        icon: sonarr
+      - name: Prowlarr
+        href: "http://prowlarr.lan"
+        icon: prowlarr
+      - name: Bazarr
+        href: "http://bazarr.lan"
+        icon: bazarr
 
-- group: Downloader
-  services:
-  - name: qBittorrent
-    href: "http://qbittorrent.lan"
-    icon: qbittorrent
+  - group: Downloader
+    services:
+      - name: qBittorrent
+        href: "http://qbittorrent.lan"
+        icon: qbittorrent
 
-- group: Library
-  services:
-  - name: Calibre-Web
-    href: "http://calibre.lan"
-    icon: calibre-web
-  - name: Audiobookshelf
-    href: "http://audiobookshelf.lan"
-    icon: audiobookshelf
+  - group: Library
+    services:
+      - name: Calibre-Web
+        href: "http://calibre.lan"
+        icon: calibre-web
+      - name: Audiobookshelf
+        href: "http://audiobookshelf.lan"
+        icon: audiobookshelf
 
-- group: Infrastructure
-  services:
-  - name: Proxmox
-    href: "https://192.168.1.49:8006"
-    icon: proxmox
-  - name: Pi-hole
-    href: "https://192.168.1.225/admin"
-    icon: pi-hole
-  - name: TP-Link Switch
-    href: "http://192.168.1.157"
-    icon: mdi-switch
-  - name: OpenMediaVault
-    href: "http://192.168.1.119"
-    icon: si-openmediavault
+  - group: Infrastructure
+    services:
+      - name: Proxmox
+        href: "https://192.168.1.49:8006"
+        icon: proxmox
+      - name: Pi-hole
+        href: "https://192.168.1.225/admin"
+        icon: pi-hole
+      - name: TP-Link Switch
+        href: "http://192.168.1.157"
+        icon: mdi-switch
+      - name: OpenMediaVault
+        href: "http://192.168.1.119"
+        icon: si-openmediavault
 
 homepage_settings:
   title: "Nuggets'Lab"

@@ -12,7 +12,7 @@
   ansible.builtin.iptables:
     chain: "INPUT"
     policy: "ACCEPT"
-  changed_when: false  # This is just a safety measure, not a real change
+  changed_when: false # This is just a safety measure, not a real change
 
 - name: Flush existing rules
   ansible.builtin.iptables:
