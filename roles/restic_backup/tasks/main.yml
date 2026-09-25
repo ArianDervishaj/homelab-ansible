@@ -35,9 +35,9 @@
 - name: Schedule restic backup cron job
   ansible.builtin.cron:
     name: "restic backup"
-    minute: "{{ restic_cron_minute }}"
-    hour: "{{ restic_cron_hour }}"
-    day: "{{ restic_cron_day }}"
+    minute: "{{ restic_backup_cron_minute }}"
+    hour: "{{ restic_backup_cron_hour }}"
+    day: "{{ restic_backup_cron_day }}"
     job: "/usr/local/bin/restic-backup.sh >> /var/log/restic-backup.log 2>&1"
     user: root
     state: present

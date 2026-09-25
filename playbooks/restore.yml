@@ -2,13 +2,12 @@
 # Usage examples:
 #   One job, one VM:
 #     ansible-playbook playbooks/restore.yml --limit arr.homelab \
-#       -e restic_restore_confirm=true -e '{"restic_restore_jobs": ["radarr"]}' --ask-vault-pass
+#       -e restic_backup_restore_confirm=true -e '{"restic_backup_restore_jobs": ["radarr"]}'
 #   Everything on one VM:
-#     ansible-playbook playbooks/restore.yml --limit arr.homelab -e restic_restore_confirm=true --ask-vault-pass
+#     ansible-playbook playbooks/restore.yml --limit arr.homelab -e restic_backup_restore_confirm=true
 #   Test restore (no downtime), all VMs:
-#     ansible-playbook playbooks/restore.yml -e restic_restore_confirm=true \
-#       -e restic_restore_target=/tmp/restore-test --ask-vault-pass
-
+#     ansible-playbook playbooks/restore.yml -e restic_backup_restore_confirm=true \
+#       -e restic_backup_restore_target=/tmp/restore-test
 - name: Restore from Restic
   hosts: homelab
   become: true
