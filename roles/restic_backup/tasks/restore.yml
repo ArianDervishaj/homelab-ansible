@@ -103,6 +103,7 @@
   loop: "{{ __restic_backup_restore_jobs }}"
   loop_control:
     label: "{{ item.name }}"
+  changed_when: true
 
 - name: Start stack
   ansible.builtin.systemd:
