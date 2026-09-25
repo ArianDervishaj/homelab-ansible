@@ -1,0 +1,37 @@
+---
+name: Lint
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+
+permissions:
+  contents: read
+
+jobs:
+  ansible-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install Ansible and ansible-lint
+      run: pip install ansible-core ansible-lint
+
+    - name: Install collections
+      run: ansible-galaxy collection install -r requirements.yml
+
+    # ansible.cfg points at ~/.vault_pass. The vault is excluded from lint,
+    # so a dummy file is enough and no real secret ever reaches CI.
+    - name: Create dummy vault password file
+      run: echo "ci-dummy" > ~/.vault_pass
+
+    - name: Run ansible-lint
+      run: ansible-lint
