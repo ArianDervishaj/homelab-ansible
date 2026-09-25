@@ -52,8 +52,8 @@
 - name: Check for image updates
   ansible.builtin.shell: |
     docker compose -f {{ docker_compose_stack_dir }}/docker-compose.yml pull 2>&1
-  register: pull_result
-  changed_when: "'Downloaded newer image' in pull_result.stdout or 'Pull complete' in pull_result.stdout"
+  register: docker_compose_pull_result
+  changed_when: "'Downloaded newer image' in docker_compose_pull_result.stdout or 'Pull complete' in docker_compose_pull_result.stdout"
   notify: Restart docker compose stack
 
 - name: Enable and start stack service
