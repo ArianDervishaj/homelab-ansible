@@ -4,9 +4,9 @@
 
 set -euo pipefail
 
-RESTIC="{{ restic_install_path }}"
+RESTIC="{{ restic_backup_install_path }}"
 BACKUP_BASE="{{ restic_backup_base }}/{{ inventory_hostname }}"
-export RESTIC_PASSWORD="{{ restic_password }}"
+export RESTIC_PASSWORD="{{ restic_backup_password }}"
 
 {% for job in restic_backup_jobs %}
 echo "[$(date)] Starting backup: {{ job.name }}"
@@ -23,8 +23,8 @@ $RESTIC -r "$REPO" backup {% for path in job.paths %}{{ path }} {% endfor %}
 
 # Forget + prune
 $RESTIC -r "$REPO" forget \
-  --keep-last {{ restic_keep_last }} \
-  --keep-monthly {{ restic_keep_monthly }} \
+  --keep-last {{ restic_backup_keep_last }} \
+  --keep-monthly {{ restic_backup_keep_monthly }} \
   --prune
 
 echo "[$(date)] Done: {{ job.name }}"

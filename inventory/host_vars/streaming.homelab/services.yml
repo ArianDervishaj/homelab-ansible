@@ -2,40 +2,40 @@
 docker_compose_stack_name: streaming
 
 docker_compose_services:
-- name: jellyfin
-  image: jellyfin/jellyfin:latest  # TODO: pin, see note below
-  container_name: jellyfin
-  devices:
-  - /dev/dri:/dev/dri
-  ports:
-  - "8096:8096"
-  volumes:
-  - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/jellyfin/config:/config"
-  - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/jellyfin/cache:/cache"
-  - "/data/media/movies:/media/movies"
-  - "/data/media/tv_shows:/media/tv_shows"
-  environment:
-    TZ: "{{ timezone }}"
+  - name: jellyfin
+    image: jellyfin/jellyfin:latest # TODO: pin, see note below
+    container_name: jellyfin
+    devices:
+      - /dev/dri:/dev/dri
+    ports:
+      - "8096:8096"
+    volumes:
+      - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/jellyfin/config:/config"
+      - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/jellyfin/cache:/cache"
+      - "/data/media/movies:/media/movies"
+      - "/data/media/tv_shows:/media/tv_shows"
+    environment:
+      TZ: "{{ timezone }}"
 
-- name: jellyseerr
-  image: ghcr.io/seerr-team/seerr:latest
-  container_name: jellyseerr
-  init: true
-  ports:
-  - "5055:5055"
-  volumes:
-  - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/jellyseerr/config:/app/config"
-  environment:
-    TZ: "{{ timezone }}"
-    LOG_LEVEL: "info"
+  - name: jellyseerr
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: jellyseerr
+    init: true
+    ports:
+      - "5055:5055"
+    volumes:
+      - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/jellyseerr/config:/app/config"
+    environment:
+      TZ: "{{ timezone }}"
+      LOG_LEVEL: "info"
 
-- name: cloudflared
-  image: cloudflare/cloudflared:2026.3.0
-  container_name: cloudflared
-  network_mode: host
-  command: tunnel run
-  volumes:
-  - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/cloudflared/config.yml:/etc/cloudflared/config.yml:ro"
-  - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/cloudflared/credentials.json:/etc/cloudflared/credentials.json:ro"
-  environment:
-    TZ: "{{ timezone }}"
+  - name: cloudflared
+    image: cloudflare/cloudflared:2026.3.0
+    container_name: cloudflared
+    network_mode: host
+    command: tunnel run
+    volumes:
+      - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/cloudflared/config.yml:/etc/cloudflared/config.yml:ro"
+      - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/cloudflared/credentials.json:/etc/cloudflared/credentials.json:ro"
+    environment:
+      TZ: "{{ timezone }}"

@@ -14,4 +14,4 @@
     owner: "{{ docker_compose_owner }}"
     group: "{{ docker_compose_group }}"
     mode: "0644"
-  notify: restart caddy
+  notify: Restart caddy

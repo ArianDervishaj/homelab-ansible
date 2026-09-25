@@ -1,4 +1,7 @@
 ---
-- name: restart cloudflared
-  ansible.builtin.command:
-    cmd: docker restart cloudflared
+- name: Restart cloudflared
+  community.docker.docker_compose_v2:
+    project_src: "{{ docker_compose_base_dir }}/streaming"
+    services:
+      - cloudflared
+    state: restarted

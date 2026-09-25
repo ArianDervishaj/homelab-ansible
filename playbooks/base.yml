@@ -22,4 +22,3 @@
     - name: Set Hostname
       ansible.builtin.hostname:
         name: "{{ inventory_hostname }}"
-

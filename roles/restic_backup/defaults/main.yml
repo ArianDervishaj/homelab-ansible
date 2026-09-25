@@ -1,34 +1,34 @@
 ---
-restic_install_path: "/usr/bin/restic"
+restic_backup_install_path: "/usr/bin/restic"
 
 restic_backup_base: "/mnt/vm-backups"
-restic_password: "{{ vault_restic_password }}"
+restic_backup_password: "{{ vault_restic_password }}"
 
 # Retention policy
-restic_keep_last: 3
-restic_keep_monthly: 3
+restic_backup_keep_last: 3
+restic_backup_keep_monthly: 3
 
 # Schedule: every 3 days at 1am
-restic_cron_minute: "0"
-restic_cron_hour: "1"
-restic_cron_day: "*/3"
+restic_backup_cron_minute: "0"
+restic_backup_cron_hour: "1"
+restic_backup_cron_day: "*/3"
 
 # Defined per host in host_vars
 restic_backup_jobs: []
 # --- Restore (tasks/restore.yml) ---
-# Safety switch: nothing happens unless you pass -e restic_restore_confirm=true
-restic_restore_confirm: false
+# Safety switch: nothing happens unless you pass -e restic_backup_restore_confirm=true
+restic_backup_restore_confirm: false
 
 # Snapshot ID, or "latest"
-restic_restore_snapshot: latest
+restic_backup_restore_snapshot: latest
 
 # Restore the newest snapshot strictly BEFORE this date, per job.
-# Overrides restic_restore_snapshot when set. Empty = off.
+# Overrides restic_backup_restore_snapshot when set. Empty = off.
 # Example: "2026-09-20" picks anything up to the end of 19 Sep.
-restic_restore_before: ""
+restic_backup_restore_before: ""
 
 # Job names to restore. Empty = every job on the host.
-restic_restore_jobs: []
+restic_backup_restore_jobs: []
 # "/" = in place (stops stack, moves current data aside).
 # Any other path = test restore, services untouched.
-restic_restore_target: /
+restic_backup_restore_target: /

@@ -19,8 +19,7 @@
 - name: Refuse to continue without a non-cloud kernel image on disk
   ansible.builtin.assert:
     that:
-      - gpu_passthrough_boot_kernels.files | map(attribute='path')
-        | reject('search', 'cloud') | list | length > 0
+      - gpu_passthrough_boot_kernels.files | map(attribute='path') | reject('search', 'cloud') | list | length > 0
     fail_msg: >-
       No non-cloud kernel image in /boot. Purging the cloud kernels now would
       leave this host unbootable.

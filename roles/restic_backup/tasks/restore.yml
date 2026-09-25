@@ -3,20 +3,20 @@
 
 - name: Require explicit confirmation
   ansible.builtin.assert:
-    that: restic_restore_confirm | bool
-    fail_msg: "Restore not confirmed. Re-run with -e restic_restore_confirm=true"
+    that: restic_backup_restore_confirm | bool
+    fail_msg: "Restore not confirmed. Re-run with -e restic_backup_restore_confirm=true"
 
 - name: Select jobs to restore
   ansible.builtin.set_fact:
-    _restore_jobs: >-
-      {{ restic_backup_jobs if (restic_restore_jobs | length == 0)
-         else (restic_backup_jobs | selectattr('name', 'in', restic_restore_jobs) | list) }}
-    _in_place: "{{ restic_restore_target == '/' }}"
-    _restore_ts: "{{ ansible_facts['date_time']['epoch'] }}"
-    _restore_snaps: {}
+    __restic_backup_restore_jobs: >-
+      {{ restic_backup_jobs if (restic_backup_restore_jobs | length == 0)
+         else (restic_backup_jobs | selectattr('name', 'in', restic_backup_restore_jobs) | list) }}
+    __restic_backup_in_place: "{{ restic_backup_restore_target == '/' }}"
+    __restic_backup_restore_ts: "{{ ansible_facts['date_time']['epoch'] }}"
+    __restic_backup_restore_snaps: {}
 
 - name: Skip host with nothing to restore
-  when: _restore_jobs | length == 0
+  when: __restic_backup_restore_jobs | length == 0
   block:
     - name: Report skip
       ansible.builtin.debug:
@@ -28,50 +28,52 @@
 # Also fails early on wrong password or missing repo, BEFORE stopping anything
 - name: List snapshots of each repo
   ansible.builtin.command: >-
-    {{ restic_install_path }} -r {{ restic_backup_base }}/{{ inventory_hostname }}/{{ item.name }}
+    {{ restic_backup_install_path }} -r {{ restic_backup_base }}/{{ inventory_hostname }}/{{ item.name }}
     snapshots --json
   environment:
-    RESTIC_PASSWORD: "{{ restic_password }}"
-  loop: "{{ _restore_jobs }}"
+    RESTIC_PASSWORD: "{{ restic_backup_password }}"
+  loop: "{{ __restic_backup_restore_jobs }}"
   loop_control:
     label: "{{ item.name }}"
   changed_when: false
-  register: _snapshot_list
+  register: __restic_backup_snapshot_list
 
 # Picks one snapshot per job:
-#   restic_restore_before set -> newest snapshot strictly before that date
-#   otherwise                 -> restic_restore_snapshot ("latest" or an ID)
+#   restic_backup_restore_before set -> newest snapshot strictly before that date
+#   otherwise                        -> restic_backup_restore_snapshot ("latest" or an ID)
 - name: Pick snapshot for each job
   ansible.builtin.set_fact:
-    _restore_snaps: "{{ _restore_snaps | combine({item.item.name: _picked}) }}"
+    __restic_backup_restore_snaps: "{{ __restic_backup_restore_snaps | combine({item.item.name: _picked}) }}"
   vars:
     _all: "{{ item.stdout | from_json }}"
     _candidates: >-
-      {{ (_all | selectattr('time', '<', restic_restore_before) | list)
-           if (restic_restore_before | length > 0)
-         else (_all if restic_restore_snapshot == 'latest'
-         else (_all | selectattr('id', 'match', restic_restore_snapshot) | list)) }}
+      {{ (_all | selectattr('time', '<', restic_backup_restore_before) | list)
+           if (restic_backup_restore_before | length > 0)
+         else (_all if restic_backup_restore_snapshot == 'latest'
+         else (_all | selectattr('id', 'match', restic_backup_restore_snapshot) | list)) }}
     _picked: "{{ (_candidates | last) if (_candidates | length > 0) else {} }}"
-  loop: "{{ _snapshot_list.results }}"
+  loop: "{{ __restic_backup_snapshot_list.results }}"
   loop_control:
     label: "{{ item.item.name }}"
 
 - name: Fail if a job has no matching snapshot
   ansible.builtin.assert:
-    that: _restore_snaps[item.name].short_id is defined
+    that: __restic_backup_restore_snaps[item.name].short_id is defined
     fail_msg: >-
       No snapshot found for {{ item.name }}
-      ({{ 'before ' ~ restic_restore_before if restic_restore_before | length > 0
-          else restic_restore_snapshot }}). Nothing was stopped or changed.
+      ({{ 'before ' ~ restic_backup_restore_before if restic_backup_restore_before | length > 0
+          else restic_backup_restore_snapshot }}). Nothing was stopped or changed.
     quiet: true
-  loop: "{{ _restore_jobs }}"
+  loop: "{{ __restic_backup_restore_jobs }}"
   loop_control:
     label: "{{ item.name }}"
 
 - name: Show snapshot to be restored
   ansible.builtin.debug:
-    msg: "{{ item.name }}: {{ _restore_snaps[item.name].short_id }} from {{ _restore_snaps[item.name].time }}"
-  loop: "{{ _restore_jobs }}"
+    msg: >-
+      {{ item.name }}: {{ __restic_backup_restore_snaps[item.name].short_id }}
+      from {{ __restic_backup_restore_snaps[item.name].time }}
+  loop: "{{ __restic_backup_restore_jobs }}"
   loop_control:
     label: "{{ item.name }}"
 
@@ -79,38 +81,40 @@
   ansible.builtin.systemd:
     name: "{{ docker_compose_stack_name }}"
     state: stopped
-  when: _in_place
+  when: __restic_backup_in_place
 
 # restic restore doesn't delete extra files, so move current data aside.
 # This also gives you a rollback copy.
 - name: Move current data aside
-  ansible.builtin.command: "mv {{ item.1 }} {{ item.1 }}.pre-restore-{{ _restore_ts }}"
+  ansible.builtin.command: "mv {{ item.1 }} {{ item.1 }}.pre-restore-{{ __restic_backup_restore_ts }}"
   args:
     removes: "{{ item.1 }}"
-  loop: "{{ _restore_jobs | subelements('paths') }}"
+  loop: "{{ __restic_backup_restore_jobs | subelements('paths') }}"
   loop_control:
     label: "{{ item.1 }}"
-  when: _in_place
+  when: __restic_backup_in_place
 
 - name: Restore snapshot
   ansible.builtin.command: >-
-    {{ restic_install_path }} -r {{ restic_backup_base }}/{{ inventory_hostname }}/{{ item.name }}
-    restore {{ _restore_snaps[item.name].short_id }} --target {{ restic_restore_target }}
+    {{ restic_backup_install_path }} -r {{ restic_backup_base }}/{{ inventory_hostname }}/{{ item.name }}
+    restore {{ __restic_backup_restore_snaps[item.name].short_id }} --target {{ restic_backup_restore_target }}
   environment:
-    RESTIC_PASSWORD: "{{ restic_password }}"
-  loop: "{{ _restore_jobs }}"
+    RESTIC_PASSWORD: "{{ restic_backup_password }}"
+  loop: "{{ __restic_backup_restore_jobs }}"
   loop_control:
     label: "{{ item.name }}"
+  changed_when: true
 
 - name: Start stack
   ansible.builtin.systemd:
     name: "{{ docker_compose_stack_name }}"
     state: started
-  when: _in_place
+  when: __restic_backup_in_place
 
 - name: Summary
   ansible.builtin.debug:
     msg: >-
-      Restored {{ _restore_jobs | map(attribute='name') | join(', ') }}
-      to {{ restic_restore_target }}.
-      {{ 'Old data kept as *.pre-restore-' ~ _restore_ts if _in_place else 'Test restore, services untouched.' }}
+      Restored {{ __restic_backup_restore_jobs | map(attribute='name') | join(', ') }}
+      to {{ restic_backup_restore_target }}.
+      {{ 'Old data kept as *.pre-restore-' ~ __restic_backup_restore_ts
+         if __restic_backup_in_place else 'Test restore, services untouched.' }}
