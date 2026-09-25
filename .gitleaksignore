@@ -1,0 +1,2 @@
+# WireGuard key leaked via ansible.logs in 2026-03. Rotated and old key revoked; safe to ignore.
+65817d1396a64969adc156a7e1d6d3c89707d0d3:ansible.logs:generic-api-key:439
