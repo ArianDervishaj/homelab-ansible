@@ -9,7 +9,7 @@
   ansible.builtin.file:
     path: "{{ nfs_media_mount_point }}"
     state: directory
-    mode: "0755"
+    mode: "{{ nfs_media_mount_mode }}"
 
 - name: Mount NFS share
   ansible.posix.mount:

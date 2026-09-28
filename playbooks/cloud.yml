@@ -1,0 +1,61 @@
+---
+- name: Deploy Cloud Stack
+  hosts: cloud.homelab
+  become: true
+
+  pre_tasks:
+    - name: Ensure Docker is running
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+  roles:
+    - nfs_media
+    - docker_compose
+
+  tasks:
+    - name: Install OnlyOffice app in Nextcloud
+      community.docker.docker_container_exec:
+        container: nextcloud
+        user: www-data
+        argv: [php, occ, app:install, onlyoffice]
+      register: oo_install
+      changed_when: oo_install.rc == 0
+      failed_when: oo_install.rc != 0 and 'already installed' not in (oo_install.stdout + oo_install.stderr)
+
+    - name: Read current OnlyOffice settings
+      community.docker.docker_container_exec:
+        container: nextcloud
+        user: www-data
+        argv: [php, occ, config:app:get, onlyoffice, "{{ item.key }}"]
+      loop: "{{ onlyoffice_settings | dict2items }}"
+      register: oo_current
+      changed_when: false
+      failed_when: false
+      no_log: true
+
+    - name: Apply OnlyOffice settings
+      community.docker.docker_container_exec:
+        container: nextcloud
+        user: www-data
+        argv: [php, occ, config:app:set, onlyoffice, "{{ item.item.key }}", "--value={{ item.item.value }}"]
+      loop: "{{ oo_current.results }}"
+      when: item.stdout != item.item.value
+      no_log: true
+
+    - name: Read internal trusted domain
+      community.docker.docker_container_exec:
+        container: nextcloud
+        user: www-data
+        argv: [php, occ, config:system:get, trusted_domains, "5"]
+      register: nc_trusted
+      changed_when: false
+      failed_when: false
+
+    - name: Trust internal hostname for OnlyOffice callbacks
+      community.docker.docker_container_exec:
+        container: nextcloud
+        user: www-data
+        argv: [php, occ, config:system:set, trusted_domains, "5", "--value=nextcloud"]
+      when: nc_trusted.stdout != "nextcloud"
