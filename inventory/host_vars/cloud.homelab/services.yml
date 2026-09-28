@@ -1,0 +1,52 @@
+---
+docker_compose_stack_name: cloud
+
+docker_compose_services:
+  - name: db
+    image: postgres:17-alpine
+    container_name: nextcloud-db
+    volumes:
+      - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/db:/var/lib/postgresql/data"
+    environment:
+      TZ: "{{ timezone }}"
+      POSTGRES_DB: "nextcloud"
+      POSTGRES_USER: "nextcloud"
+      POSTGRES_PASSWORD: "{{ vault_nextcloud_db_password }}"
+
+  - name: redis
+    image: redis:7-alpine
+    container_name: nextcloud-redis
+
+  - name: nextcloud
+    image: nextcloud:stable-apache
+    container_name: nextcloud
+    ports:
+      - "8080:80"
+    volumes:
+      - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/nextcloud:/var/www/html"
+      - "/mnt/nextcloud:/data"
+    environment:
+      TZ: "{{ timezone }}"
+      POSTGRES_HOST: "db"
+      POSTGRES_DB: "nextcloud"
+      POSTGRES_USER: "nextcloud"
+      POSTGRES_PASSWORD: "{{ vault_nextcloud_db_password }}"
+      REDIS_HOST: "redis"
+      NEXTCLOUD_ADMIN_USER: "admin"
+      NEXTCLOUD_ADMIN_PASSWORD: "{{ vault_nextcloud_admin_password }}"
+      NEXTCLOUD_TRUSTED_DOMAINS: "cloud.lan {{ ansible_host }}"
+      NEXTCLOUD_DATA_DIR: "/data"
+      TRUSTED_PROXIES: "192.168.100.10"
+    depends_on:
+      - db
+      - redis
+  - name: onlyoffice
+    image: onlyoffice/documentserver:latest
+    container_name: onlyoffice
+    ports:
+      - "8081:80"
+    environment:
+      TZ: "{{ timezone }}"
+      JWT_ENABLED: "true"
+      JWT_SECRET: "{{ vault_onlyoffice_jwt_secret }}"
+      ALLOW_PRIVATE_IP_ADDRESS: "true"

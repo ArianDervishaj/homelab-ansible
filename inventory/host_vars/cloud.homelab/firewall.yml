@@ -1,0 +1,11 @@
+---
+firewall_rules:
+  - port: 8080
+    source: "192.168.100.10"
+    comment: "Nextcloud from Caddy only"
+  - port: 8081
+    source: "192.168.100.10"
+    comment: "OnlyOffice from Caddy only"
+  - port: 68
+    protocol: udp
+    comment: "DHCP Client"

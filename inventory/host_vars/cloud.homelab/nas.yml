@@ -1,0 +1,4 @@
+---
+nfs_media_share_path: "/export/nextcloud"
+nfs_media_mount_point: "/mnt/nextcloud"
+nfs_media_mount_mode: "02770"

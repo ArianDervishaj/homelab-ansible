@@ -30,3 +30,6 @@
 
 - name: Backups
   ansible.builtin.import_playbook: backup.yml
+
+- name: Cloud
+  ansible.builtin.import_playbook: cloud.yml

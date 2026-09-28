@@ -1,0 +1,6 @@
+---
+onlyoffice_settings:
+  DocumentServerUrl: "http://office.lan/"
+  DocumentServerInternalUrl: "http://onlyoffice/"
+  StorageUrl: "http://nextcloud/"
+  jwt_secret: "{{ vault_onlyoffice_jwt_secret }}"
