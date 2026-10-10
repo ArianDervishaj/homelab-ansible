@@ -36,7 +36,8 @@
     dest: "{{ docker_compose_stack_dir }}/docker-compose.yml"
     owner: "{{ docker_compose_owner }}"
     group: "{{ docker_compose_group }}"
-    mode: "0644"
+    mode: "0600"
+  diff: false
   notify: Restart docker compose stack
 
 - name: Template systemd service
