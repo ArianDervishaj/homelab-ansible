@@ -1,0 +1,12 @@
+---
+restic_backup_jobs:
+  - name: nextcloud
+    # Names from services.yml: container nextcloud-db, db/user nextcloud
+    pre_command: >-
+      mkdir -p -m 0700 /opt/stacks/cloud/db-dump &&
+      umask 077 &&
+      docker exec nextcloud-db pg_dump -U nextcloud -d nextcloud
+      > /opt/stacks/cloud/db-dump/nextcloud.sql
+    paths:
+      - /opt/stacks/cloud/db-dump/nextcloud.sql
+      - /opt/stacks/cloud/nextcloud/config
