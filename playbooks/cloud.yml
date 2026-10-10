@@ -62,3 +62,26 @@
         user: www-data
         argv: [php, occ, config:system:set, trusted_domains, "5", "--value=nextcloud"]
       when: nc_trusted.stdout != "nextcloud"
+
+    - name: Read Nextcloud system settings
+      community.docker.docker_container_exec:
+        container: nextcloud
+        user: www-data
+        argv: "{{ ['php', 'occ', 'config:system:get'] + item.key }}"
+      loop: "{{ nextcloud_system_settings }}"
+      loop_control:
+        label: "{{ item.key | join(' ') }}"
+      register: nc_system
+      changed_when: false
+      failed_when: false
+      check_mode: false
+
+    - name: Apply Nextcloud system settings
+      community.docker.docker_container_exec:
+        container: nextcloud
+        user: www-data
+        argv: "{{ ['php', 'occ', 'config:system:set'] + item.item.key + ['--value=' ~ item.item.value] }}"
+      loop: "{{ nc_system.results }}"
+      loop_control:
+        label: "{{ item.item.key | join(' ') }}"
+      when: item.stdout != item.item.value

@@ -1,0 +1,12 @@
+---
+nextcloud_system_settings:
+  - key: [trusted_domains, "6"]
+    value: cloud.nuggetscloud.com
+  - key: [trusted_proxies, "1"]
+    value: 172.18.0.0/16
+  - key: [overwriteprotocol]
+    value: https
+  - key: [overwritecondaddr]
+    value: '^172\.18\.'
+  - key: [overwrite.cli.url]
+    value: https://cloud.nuggetscloud.com
