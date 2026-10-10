@@ -1,4 +1,7 @@
 ---
+cloudflare_tunnel_id: "{{ vault_cloudflare_tunnel_id }}"
+cloudflare_tunnel_secret: "{{ vault_cloudflare_tunnel_secret }}"
+
 cloudflare_ingress:
   - hostname: media.nuggetscloud.com
     service: "http://192.168.100.11:8096"

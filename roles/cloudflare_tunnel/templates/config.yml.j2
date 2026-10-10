@@ -1,8 +1,7 @@
 # {{ ansible_managed }}
-# NOTE: When adding a new hostname to cloudflare_ingress, you must also
-# create the DNS route manually (one-time):
-#   cloudflared tunnel route dns ansible-streaming-tunnel hostname
-tunnel: {{ vault_cloudflare_tunnel_id }}
+# New hostnames need a DNS route (one-time):
+#   cloudflared tunnel route dns <tunnel> <hostname>
+tunnel: {{ cloudflare_tunnel_id }}
 credentials-file: /etc/cloudflared/credentials.json
 
 ingress:

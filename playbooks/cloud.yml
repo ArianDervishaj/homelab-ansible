@@ -12,6 +12,7 @@
 
   roles:
     - nfs_media
+    - cloudflare_tunnel
     - docker_compose
 
   tasks:

@@ -50,3 +50,13 @@ docker_compose_services:
       JWT_ENABLED: "true"
       JWT_SECRET: "{{ vault_onlyoffice_jwt_secret }}"
       ALLOW_PRIVATE_IP_ADDRESS: "true"
+
+  - name: cloudflared
+    image: cloudflare/cloudflared:2026.3.0
+    container_name: cloudflared
+    command: tunnel run
+    volumes:
+      - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/cloudflared/config.yml:/etc/cloudflared/config.yml:ro"
+      - "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}/cloudflared/credentials.json:/etc/cloudflared/credentials.json:ro"
+    environment:
+      TZ: "{{ timezone }}"

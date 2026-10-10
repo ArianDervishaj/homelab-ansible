@@ -1,0 +1,9 @@
+---
+cloudflare_tunnel_id: "{{ vault_cloudflare_cloud_tunnel_id }}"
+cloudflare_tunnel_secret: "{{ vault_cloudflare_cloud_tunnel_secret }}"
+
+cloudflare_ingress:
+  - hostname: cloud.nuggetscloud.com
+    service: "http://nextcloud:80"
+  - hostname: office.nuggetscloud.com
+    service: "http://onlyoffice:80"
