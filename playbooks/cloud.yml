@@ -34,6 +34,7 @@
       changed_when: false
       failed_when: false
       no_log: true
+      check_mode: false
 
     - name: Apply OnlyOffice settings
       community.docker.docker_container_exec:
@@ -52,6 +53,7 @@
       register: nc_trusted
       changed_when: false
       failed_when: false
+      check_mode: false
 
     - name: Trust internal hostname for OnlyOffice callbacks
       community.docker.docker_container_exec:
