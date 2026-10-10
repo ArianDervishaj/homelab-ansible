@@ -1,7 +1,7 @@
 ---
 - name: Restart cloudflared
   community.docker.docker_compose_v2:
-    project_src: "{{ docker_compose_base_dir }}/streaming"
+    project_src: "{{ docker_compose_base_dir }}/{{ docker_compose_stack_name }}"
     services:
       - cloudflared
     state: restarted
