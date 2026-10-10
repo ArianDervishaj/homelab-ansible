@@ -11,6 +11,12 @@ export RESTIC_PASSWORD="{{ restic_backup_password }}"
 {% for job in restic_backup_jobs %}
 echo "[$(date)] Starting backup: {{ job.name }}"
 REPO="${BACKUP_BASE}/{{ job.name }}"
+{% if job.pre_command is defined %}
+
+# Pre-command (e.g. DB dump). set -e aborts the script if it fails.
+echo "[$(date)] Pre-command: {{ job.name }}"
+( {{ job.pre_command }} )
+{% endif %}
 
 # Init repo if it doesn't exist
 if ! $RESTIC -r "$REPO" snapshots &>/dev/null; then
